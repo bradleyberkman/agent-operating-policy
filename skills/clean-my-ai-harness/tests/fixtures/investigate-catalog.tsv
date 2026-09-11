@@ -1,0 +1,2 @@
+catalog_id	skill	source	exposure	job	trigger	caller_evidence	overlap	verdict	reason	action
+plugin:sites:building	sites:building	plugin:configured	enabled plugin or current session	Build a publishable site artifact	A site artifact is requested	Enabled bundled Sites plugin manifest	design-html	INVESTIGATE	Configured but absent from the prior receipt	Verify exposure and caller

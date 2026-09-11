@@ -1,0 +1,2 @@
+{"schema_version":1,"harness":"codex","provider_identity":"sites@openai-bundled","callable_name":"building","timestamp":"2026-08-19T05:30:00Z","caller_class":"human"}
+{"schema_version":1,"harness":"claude","provider_identity":"example@claude-plugins-official","callable_name":"example","timestamp":"2026-08-19T05:31:00Z","caller_class":"test"}

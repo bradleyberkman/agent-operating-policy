@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/clean-my-ai-harness/harness-surface-evidence.schema.json",
+  "title": "Cross-harness skill configuration and exposure evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "surfaces"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/surface"}
+    }
+  },
+  "$defs": {
+    "portableIdentity": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/+\\-]{0,199}$"
+    },
+    "portableReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "not": {"pattern": "^(?:/|~)|\\\\|(?:^|/)\\.\\.(?:/|$)"}
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness", "surface", "skills"],
+      "properties": {
+        "harness": {"enum": ["claude", "codex"]},
+        "surface": {"enum": ["claude-ai", "claude-code", "anthropic-api", "unknown-claude-surface", "codex-cli", "codex-app", "openai-api", "unknown-codex-surface"]},
+        "skills": {"type": "array", "items": {"$ref": "#/$defs/skill"}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"harness": {"const": "claude"}}},
+          "then": {"properties": {"surface": {"enum": ["claude-ai", "claude-code", "anthropic-api", "unknown-claude-surface"]}}},
+          "else": {"properties": {"surface": {"enum": ["codex-cli", "codex-app", "openai-api", "unknown-codex-surface"]}}}
+        }
+      ]
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["catalog_id", "provider_identity", "callable_name", "source_kind", "source_ref", "configuration_state", "exposure_state"],
+      "properties": {
+        "catalog_id": {"$ref": "#/$defs/portableIdentity"},
+        "provider_identity": {"$ref": "#/$defs/portableIdentity"},
+        "callable_name": {"$ref": "#/$defs/portableIdentity"},
+        "source_kind": {"enum": ["repository", "local-root", "system", "symlink", "plugin"]},
+        "source_ref": {"$ref": "#/$defs/portableReference"},
+        "configuration_state": {"enum": ["enabled", "disabled", "not-applicable", "unknown"]},
+        "exposure_state": {"enum": ["exposed", "not-exposed", "unknown"]},
+        "symlink_target": {"$ref": "#/$defs/portableIdentity"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"source_kind": {"const": "symlink"}}},
+          "then": {"required": ["symlink_target"]},
+          "else": {"not": {"required": ["symlink_target"]}}
+        }
+      ]
+    }
+  }
+}

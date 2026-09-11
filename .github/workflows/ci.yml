@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Committed renderings match policy sources
+        run: python3 tools/adapters/check_generation.py
+      - name: Adapter tests
+        run: python3 -m unittest tools/tests/test_policy_tools.py tools/tests/test_skill_render.py -v
+      - name: Skill tests
+        run: python3 skills/clean-my-ai-harness/tests/test_harness_evidence.py
+      - name: Hook syntax
+        run: for f in hooks/*.sh; do bash -n "$f"; done
+      - name: Hook spec
+        run: bash hooks/browser-launch-guard.test.sh
+      - name: Example settings parse
+        run: python3 -c "import json; json.load(open('hooks/settings.example.json'))"

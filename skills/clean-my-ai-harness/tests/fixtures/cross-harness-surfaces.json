@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "surfaces": [
+    {
+      "harness": "claude",
+      "surface": "claude-code",
+      "skills": [
+        {"catalog_id":"repo:clean-my-ai-harness","provider_identity":"repository:brain-in-a-vat-group","callable_name":"clean-my-ai-harness","source_kind":"repository","source_ref":"skills/clean-my-ai-harness/SKILL.md","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"fixture:claude-local","provider_identity":"local-root:claude","callable_name":"claude-local","source_kind":"local-root","source_ref":"<home>/.claude/skills/claude-local/SKILL.md","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"fixture:claude-system","provider_identity":"system:claude","callable_name":"claude-system","source_kind":"system","source_ref":"<system>/skills/claude-system/SKILL.md","configuration_state":"not-applicable","exposure_state":"exposed"},
+        {"catalog_id":"fixture:claude-symlink","provider_identity":"symlink:claude-alias","callable_name":"claude-alias","source_kind":"symlink","source_ref":"<home>/.claude/skills/claude-alias","symlink_target":"local-root:claude","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"fixture:claude-plugin","provider_identity":"example@claude-plugins-official","callable_name":"example","source_kind":"plugin","source_ref":"plugin:claude-plugins-official/example/1.0.0","configuration_state":"enabled","exposure_state":"exposed"}
+      ]
+    },
+    {
+      "harness": "codex",
+      "surface": "codex-cli",
+      "skills": [
+        {"catalog_id":"repo:clean-my-ai-harness","provider_identity":"repository:brain-in-a-vat-group","callable_name":"clean-my-ai-harness","source_kind":"repository","source_ref":"skills/clean-my-ai-harness/SKILL.md","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"fixture:codex-local","provider_identity":"local-root:codex","callable_name":"codex-local","source_kind":"local-root","source_ref":"<home>/.agents/skills/codex-local/SKILL.md","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"fixture:codex-system","provider_identity":"system:codex","callable_name":"codex-system","source_kind":"system","source_ref":"<system>/skills/codex-system/SKILL.md","configuration_state":"not-applicable","exposure_state":"exposed"},
+        {"catalog_id":"fixture:codex-symlink","provider_identity":"symlink:codex-alias","callable_name":"codex-alias","source_kind":"symlink","source_ref":"<home>/.codex/skills/codex-alias","symlink_target":"local-root:codex","configuration_state":"enabled","exposure_state":"exposed"},
+        {"catalog_id":"plugin:sites:building","provider_identity":"sites@openai-bundled","callable_name":"building","source_kind":"plugin","source_ref":"plugin:openai-bundled/sites/0.1.33","configuration_state":"enabled","exposure_state":"exposed"}
+      ]
+    }
+  ]
+}
