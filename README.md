@@ -16,11 +16,36 @@ The harness files are build output. `tools/adapters/render_policy.py` concatenat
 
 Skills use the same idea. A skill that must name its harness writes `{{HARNESS_NAME}}`, `{{AGENT_INSTRUCTIONS_FILE}}`, or `{{SKILLS_DIR}}`. `render_skills.py` substitutes per harness and rejects any other brace-wrapped uppercase name, so a typo cannot ship. `install_skills.py` copies the committed `skills/` tree from HEAD into a runtime directory, and refuses to overwrite a directory it did not create.
 
-## Install
+## Try it in an isolated directory
 
-For Claude Code, copy `generated/CLAUDE.md` to `~/.claude/CLAUDE.md`, copy `hooks/*.sh` to `~/.claude/hooks/`, and merge `hooks/settings.example.json` into `~/.claude/settings.json`. Then run `python3 tools/adapters/install_skills.py --harness claude --output-dir ~/.claude/skills`. If that directory already holds skills the installer stops; move them aside or pick another path.
+This is a starting point for people who already use coding agents and want to inspect or adapt their operating rules. It assumes one operator and includes a broad ticket-authority model. Read [policy/universal.md](policy/universal.md), especially "Production authority", before adopting it. Markdown instructions and shell hooks do not replace credential isolation or your agent runtime's permission controls.
 
-For Codex, copy `generated/AGENTS.md` to `~/.codex/AGENTS.md` and run the installer with `--harness codex --output-dir ~/.agents/skills`.
+The tools require Git and Python 3.12 or newer. The Claude hooks use Bash and `python3`. Clone the repository, then render a skill copy outside your checkout before changing a live agent setup:
+
+```sh
+git clone https://github.com/bradleyberkman/agent-operating-policy.git
+cd agent-operating-policy
+python3 tools/adapters/check_generation.py
+python3 tools/adapters/install_skills.py --harness codex --output-dir ../policy-preview-codex
+```
+
+Use `--harness claude` and a different output directory to inspect the Claude version. The installer reads committed skill content from `HEAD`, so commit your source changes before trying an adapted version. It refuses an existing nonempty output directory it did not create. It also refuses a refresh that would remove locally added files, but it can replace edits to paths that belong to the projection. Keep your canonical edits in `skills/`.
+
+## Adopt the parts you want
+
+Back up your existing instruction files, settings, hooks, and skills first. Compare the generated policy with your current instructions and reconcile the rules you want to retain. Copying a generated file over your global instructions replaces them for every project that loads that file.
+
+For Claude Code, the generated policy goes in `~/.claude/CLAUDE.md`. Put the reviewed hook scripts in `~/.claude/hooks/`, preserve their executable permissions, and merge [hooks/settings.example.json](hooks/settings.example.json) into your existing `~/.claude/settings.json`. The example adds a Bash browser-launch guard and a session-end checklist. Review both scripts before enabling them.
+
+For Codex, the generated policy goes in `~/.codex/AGENTS.md`. The Claude hook settings do not configure Codex hooks.
+
+After reviewing the isolated projection, run the installer with `--harness claude --output-dir ~/.claude/skills` or `--harness codex --output-dir ~/.agents/skills` only if that destination is suitable for this installer. If you already maintain skills there, keep the isolated projection and copy the selected rendered skill directories into your existing setup yourself.
+
+To undo adoption, restore your backups and remove the hook entries and skill directories you added. The installer does not have an uninstall command.
+
+## Contributing
+
+Edit the owning files in `policy/` or `skills/`, never the generated renderings. The checks and test commands are listed in [.github/workflows/ci.yml](.github/workflows/ci.yml). For a policy proposal, explain the agent behavior it changes and give a concrete case where that behavior helps. Keep company identifiers, credentials, and private transcripts out of examples and issue reports.
 
 ## What was left out
 
