@@ -10,6 +10,22 @@ An operating policy for coding agents, plus the skills and Claude Code hooks tha
 - `hooks/`. A PreToolUse guard that refuses unmanaged browser launches from Bash, a SessionEnd checklist, and an example settings block.
 - `tools/`. Renderer, installer, tests.
 
+## One decision: keep browser verification in a managed runner
+
+An agent checking a local page can reach for a direct browser command or a temporary Playwright script. That can leave a visible browser running or select the operator’s personal profile. The [browser policy](policy/coding.md) routes unattended verification through a checked-in runner with an ephemeral context; the [Claude Bash hook](hooks/browser-launch-guard.sh) rejects recognizable unmanaged launch commands before they execute.
+
+The distinction is deliberate: `npx playwright test` passes this guard, while `npx playwright test --headed` and an inline `chromium.launch(...)` snippet are denied. Browser installation and process diagnostics remain available. The hook returns a reason and directs the agent to the supported verification route.
+
+Run the [decision-matrix test](hooks/browser-launch-guard.test.sh) from the repository root:
+
+```sh
+bash hooks/browser-launch-guard.test.sh
+```
+
+It submits command strings to the hook and checks its responses without launching a browser. Cases cover shell wrappers, escaped application paths, interactive Playwright modes, and allowed test and diagnostic commands.
+
+The tradeoff is a small, inspectable command classifier, not a shell sandbox. It cannot establish that an allowed runner is safe, and it intentionally fails open on malformed hook input or a missing Python runtime so a broken hook does not stop every Bash call. Runner review, credential isolation, and process cleanup remain separate responsibilities. The fixture proves the listed decisions, not that every possible launch can be caught.
+
 ## Policy as source
 
 The harness files are build output. `tools/adapters/render_policy.py` concatenates the harness routing file with the four shared sources and stamps the result with a generation hash, the SHA-256 of the source bytes. `check_generation.py` fails when a committed rendering differs from its sources; CI runs it on every push. A downstream repository can vendor a rendering and pin the expected generation, so a stale copy fails its own build instead of drifting.
