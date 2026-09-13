@@ -63,3 +63,5 @@ Anything that only makes sense inside one company: skills bound to its CRM, tick
 The wizard skill is Matt Pocock's, MIT, included with its license file.
 
 Copyright 2026 Bradley Berkman. MIT.
+
+<!-- Mac/personal environment proof, BIV-272 -->
