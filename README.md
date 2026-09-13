@@ -45,7 +45,16 @@ To undo adoption, restore your backups and remove the hook entries and skill dir
 
 ## Contributing
 
-Edit the owning files in `policy/` or `skills/`, never the generated renderings. The checks and test commands are listed in [.github/workflows/ci.yml](.github/workflows/ci.yml). For a policy proposal, explain the agent behavior it changes and give a concrete case where that behavior helps. Keep company identifiers, credentials, and private transcripts out of examples and issue reports.
+Edit the owning files in `policy/` or `skills/`, never the generated renderings. Re-render with
+`python3 tools/adapters/render_policy.py` and commit the result, then run the same checks CI does:
+
+```sh
+python3 tools/adapters/check_generation.py
+python3 -m unittest tools/tests/test_policy_tools.py tools/tests/test_skill_render.py
+python3 skills/clean-my-ai-harness/tests/test_harness_evidence.py
+```
+
+The authoritative list is [.github/workflows/ci.yml](.github/workflows/ci.yml). For a policy proposal, explain the agent behavior it changes and give a concrete case where that behavior helps. Keep company identifiers, credentials, and private transcripts out of examples and issue reports.
 
 ## What was left out
 
