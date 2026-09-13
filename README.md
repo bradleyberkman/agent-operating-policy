@@ -12,7 +12,7 @@ An operating policy for coding agents, plus the skills and Claude Code hooks tha
 
 ## Policy as source
 
-The harness files are build output. `tools/adapters/render_policy.py` concatenates the harness routing file with the four shared sources and stamps the result with a generation hash, the SHA-256 of the source bytes. `check_generation.py` fails when a committed rendering differs from its sources; CI runs it on every push. A downstream repository can vendor a rendering and pin the expected generation, so a stale copy fails its own build instead of drifting.
+The harness files are build output. `tools/adapters/render_policy.py` concatenates the harness routing file with the four shared sources and stamps the result with a generation hash, the SHA-256 of the source bytes. `check_generation.py` fails when a committed rendering differs from its sources; CI runs it on every pull request and on pushes to `main`. A downstream repository can vendor a rendering and pin the expected generation, so a stale copy fails its own build instead of drifting.
 
 Skills use the same idea. A skill that must name its harness writes `{{HARNESS_NAME}}`, `{{AGENT_INSTRUCTIONS_FILE}}`, or `{{SKILLS_DIR}}`. `render_skills.py` substitutes per harness and rejects any other brace-wrapped uppercase name, so a typo cannot ship. `install_skills.py` copies the committed `skills/` tree from HEAD into a runtime directory, and refuses to overwrite a directory it did not create.
 
