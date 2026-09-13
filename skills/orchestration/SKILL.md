@@ -1,6 +1,6 @@
 ---
 name: orchestration
-description: Contract for running a multi-agent batch in any repository — deciding whether to fan out, measuring the machine before capping concurrency, writing a worker brief that survives without the orchestrator, monitoring where the work actually writes, verifying the merged head rather than the lanes, and integrating without breaking bot authorship. This skill should be used when dispatching parallel implementation agents against a planned batch.
+description: Contract for running a multi-agent batch in any repository — deciding whether to fan out, measuring the machine before capping concurrency, writing a worker brief that survives without the orchestrator, monitoring where the work actually writes, verifying the merged head rather than the lanes, and integrating under the repository's identity contract. This skill should be used when dispatching parallel implementation agents against a planned batch.
 ---
 
 # Orchestrate a batch
@@ -249,9 +249,9 @@ The same discipline applies to claims. **A claim you carry from a worker's repor
 
 ## Integrate without breaking authorship
 
-Agent commits must carry the bot identity in **both** author and committer fields, plus the repository's required trailer. Never `Co-authored-by:`, which attaches an avatar and implies joint authorship — the human must remain a distinct principal, or they become ineligible to give the independent approval the change requires.
+Follow the repository's recorded identity and trailer contract for interactive commits and pull-request publication. Unattended automation retains its named, scoped service identity. Include the tool's co-author trailer when the contract requires it. Commit attribution and publication do not constitute the operator's independent review or approval.
 
-**The integrator's own merge commits are commits too.** They need the same identity and the same trailer, and forgetting it fails at pull-request open — the safe outcome, but it costs a branch rebuild. Set the identity in the environment before the first merge rather than per commit.
+**The integrator's own merge commits are commits too.** Apply the same recorded identity and trailer contract. Set the identity in the environment before the first merge rather than per commit.
 
 **Consolidating worker branches rewrites the committer.** Cherry-picking preserves the author but stamps the consolidating identity as committer. Merging worker branches instead avoids the rewrite entirely, at the cost of a messier history; prefer it for large batches.
 
@@ -261,7 +261,7 @@ Verify before opening the pull request:
 git log "$REMOTE/$TRUNK..HEAD" --format='%h %an <%ae> | %cn <%ce> | %(trailers:key=<TrailerKey>,valueonly)'
 ```
 
-Every line must show the bot identity in both columns and carry the trailer.
+Every line must match the recorded author and committer identities and carry the required trailers.
 
 **A base that moved invalidates assumptions, not automatically every test.** Re-fetch before integrating, inspect the changed contract/seam, and recompute the affected proof. Re-run the combined gate when compiled behavior, an integration seam, or the composition changed; retain narrow evidence only when the impact analysis shows its oracle and inputs are unchanged.
 
