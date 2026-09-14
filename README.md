@@ -65,3 +65,5 @@ The wizard skill is Matt Pocock's, MIT, included with its license file.
 Copyright 2026 Bradley Berkman. MIT.
 
 <!-- Mac/personal environment proof, BIV-272 -->
+
+<!-- Conductor/personal merge-leg proof under the owner-scoped PAT, BIV-272 -->
