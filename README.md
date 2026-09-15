@@ -56,6 +56,10 @@ python3 skills/clean-my-ai-harness/tests/test_harness_evidence.py
 
 The authoritative list is [.github/workflows/ci.yml](.github/workflows/ci.yml). For a policy proposal, explain the agent behavior it changes and give a concrete case where that behavior helps. Keep company identifiers, credentials, and private transcripts out of examples and issue reports.
 
+Pull requests in this repository merge through Mergify after the required `ci` check passes.
+Maintainers queue reviewed pull requests with `@mergifyio queue`; the queue updates the branch
+against `main` and squash-merges it after checks pass.
+
 ## What was left out
 
 Anything that only makes sense inside one company: skills bound to its CRM, ticket tracker, reporting pipelines; vendored third-party skills, which have their own upstreams; and the names, identifiers, and paths of the people and systems involved. "The operator" throughout means the one person whose judgment the policy defers to.
